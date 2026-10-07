@@ -109,6 +109,7 @@
         <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/shop') ?>">Shop</a></li>
         <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/categories') ?>">Categories</a></li>
         <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/about') ?>">About Us</a></li>
+        <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/aboutus') ?>">Who We Are</a></li>
         <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/contact') ?>">Contact</a></li>
         <li class="nav-item ms-lg-4 mt-3 mt-lg-0">
             <a href="#" class="btn btn-premium"><i class="bi bi-cart3"></i> Cart (0)</a>
