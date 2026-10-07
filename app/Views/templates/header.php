@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -42,6 +42,13 @@
         }
         .nav-link:hover {
             color: var(--accent) !important;
+        }
+        /* Active Link Highlight */
+        .nav-link.active {
+            color: var(--accent) !important;
+            font-weight: 700 !important;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 6px;
         }
         /* Buttons */
         .btn-premium {
@@ -98,19 +105,20 @@
 <nav class="navbar navbar-expand-lg sticky-top py-3">
   <div class="container">
     <a class="navbar-brand fs-3 text-dark" href="<?= base_url() ?>">
-        <i class="bi bi-box-seam text-accent"></i> Ecart<span class="text-accent">.</span>
+
+        <i class="bi bi-box-seam text-accent"></i> Ecart Application 2026<span class="text-accent">.</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url() ?>">Home</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/shop') ?>">Shop</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/categories') ?>">Categories</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/about') ?>">About Us</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/aboutus') ?>">Who We Are</a></li>
-        <li class="nav-item mx-2"><a class="nav-link" href="<?= base_url('home/contact') ?>">Contact</a></li>
+        <li class="nav-item mx-2"><a class="nav-link <?= url_is('') || url_is('/') ? 'active' : '' ?>" href="<?= base_url() ?>">Home</a></li>
+        <li class="nav-item mx-2"><a class="nav-link <?= url_is('home/shop') ? 'active' : '' ?>" href="<?= base_url('home/shop') ?>">Shop</a></li>
+        <li class="nav-item mx-2"><a class="nav-link <?= url_is('home/categories') ? 'active' : '' ?>" href="<?= base_url('home/categories') ?>">Categories</a></li>
+        <li class="nav-item mx-2"><a class="nav-link <?= url_is('home/about') ? 'active' : '' ?>" href="<?= base_url('home/about') ?>">About Us</a></li>
+        <li class="nav-item mx-2"><a class="nav-link <?= url_is('home/aboutus') ? 'active' : '' ?>" href="<?= base_url('home/aboutus') ?>">Who We Are</a></li>
+        <li class="nav-item mx-2"><a class="nav-link <?= url_is('home/contact') ? 'active' : '' ?>" href="<?= base_url('home/contact') ?>">Contact</a></li>
         <li class="nav-item ms-lg-4 mt-3 mt-lg-0">
             <a href="#" class="btn btn-premium"><i class="bi bi-cart3"></i> Cart (0)</a>
         </li>
