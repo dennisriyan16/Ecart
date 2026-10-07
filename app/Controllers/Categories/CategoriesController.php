@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Controllers\Categories;
+
 use App\Controllers\BaseController;
 
 class CategoriesController extends BaseController
