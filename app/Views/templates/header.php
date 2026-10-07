@@ -105,7 +105,7 @@
 <nav class="navbar navbar-expand-lg sticky-top py-3">
   <div class="container">
     <a class="navbar-brand fs-3 text-dark" href="<?= base_url() ?>">
-        <i class="bi bi-box-seam text-accent"></i> Ecart<span class="text-accent">.</span>
+        <i class="bi bi-box-seam text-accent"></i> Ecart Application<span class="text-accent">.</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
