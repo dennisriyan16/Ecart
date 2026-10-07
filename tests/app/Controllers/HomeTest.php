@@ -1,5 +1,7 @@
 ﻿<?php
+
 namespace App\Controllers;
+
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 
@@ -10,6 +12,7 @@ class HomeTest extends CIUnitTestCase
     public function testHomeRouteIsWorking()
     {
         $result = $this->call('get', '/');
+
         $result->assertOK();
         $result->assertSee('Elevate Your');
     }
@@ -17,6 +20,7 @@ class HomeTest extends CIUnitTestCase
     public function testShopRouteIsWorking()
     {
         $result = $this->call('get', 'home/shop');
+
         $result->assertOK();
         $result->assertSee('Aura Wireless Pro');
     }
