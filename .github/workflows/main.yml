@@ -7,44 +7,81 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
-    name: Build and Test
+  security-and-lint:
+    name: Security & Linting Checks
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for secret scanners and SonarQube
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: intl, mbstring, json, xml
-        coverage: none
+      # 1. SECRET SCANNING (Fails if passwords/keys are exposed)
+      - name: Gitleaks Secret Scanner
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install Dependencies
-      run: composer install --no-progress --prefer-dist --optimize-autoloader
+      # 2. LINTING
+      - name: Setup PHP for Linting
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Run PHP Linter
+        run: find . -type f -name '*.php' -exec php -l {} \;
 
-    - name: Run PHPUnit Tests
-      run: vendor/bin/phpunit --no-coverage
-      
+      # 3. STATIC ANALYSIS (SonarQube/SonarCloud)
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+
+  build-and-test:
+    name: Build and Unit Tests
+    runs-on: ubuntu-latest
+    needs: security-and-lint # MUST pass security and linting first
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: intl, mbstring, json, xml
+          coverage: none
+
+      - name: Install Dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Run PHPUnit Tests
+        run: vendor/bin/phpunit --no-coverage
 
   deploy-to-cpanel:
-    name: Deploy to cPanel
+    name: Deploy to cPanel (Live)
     runs-on: ubuntu-latest
-    needs: build-and-test
-    
-    # ONLY deploy if on the main branch
+    needs: build-and-test # MUST pass unit tests to deploy
     if: github.ref == 'refs/heads/main'
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: /public_html/Ecart/
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /public_html/Ecart/
+
+  dast-zap-scan:
+    name: OWASP ZAP Dynamic Scan
+    runs-on: ubuntu-latest
+    needs: deploy-to-cpanel # Runs on the live/staging server AFTER deployment
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: 'https://hivetask.com/Ecart'
